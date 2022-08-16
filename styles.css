@@ -1,0 +1,78 @@
+body {
+  background-color: goldenrod;
+}
+
+.container {
+  display: flex;
+  align-content: center;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.calculator {
+  max-width: 450px;
+  padding: 1rem;
+  background-color: #fff;
+  max-height: 400px;
+  display: grid;
+  grid-template-areas:
+    "display"
+    "buttons1";
+  justify-content: center;
+}
+
+.display {
+  width: 100%;
+  border: 1px solid black;
+  height: 50px;
+  grid-area: display;
+  justify-content: center;
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.row-1 {
+  grid-area: buttons1;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  /* grid-gap: 5px; */
+}
+
+.row-2 {
+  grid-area: buttons2;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  /* grid-gap: 5px; */
+}
+
+.row-3 {
+  grid-area: buttons3;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  /* grid-gap: 5px; */
+}
+
+.row-4 {
+  grid-area: buttons4;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  /* grid-gap: 5px; */
+}
+.row-5 {
+  grid-area: buttons5;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  /* grid-gap: 5px; */
+}
+
+#zero {
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.keypad-button {
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+}

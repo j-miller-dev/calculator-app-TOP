@@ -76,3 +76,22 @@ body {
   height: 60px;
   cursor: pointer;
 }
+
+.clear {
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+}
+
+.operator {
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+}
+
+.operator-clicked {
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  border: 2px solid black;
+}

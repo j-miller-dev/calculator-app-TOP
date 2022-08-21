@@ -1,8 +1,13 @@
 // Variables
 let digitDisplay = document.querySelector(".display-text");
+let displayValue = "";
+let firstValue = "";
+let secondValue = 0;
+let activeOperator = "";
 const buttonClick = document.querySelectorAll(".keypad-button");
-let displayValue = "0";
-const clearButton = document.getElementById("#clear");
+const clearButton = document.getElementById("clear");
+const equalsButton = document.getElementById("equals");
+// let firstValue = 0;
 
 // Simple calculator functions
 // add
@@ -14,9 +19,6 @@ function add(a) {
   return total;
 }
 
-let numbers1 = [33, 44, 4, 6];
-console.log(add(numbers1));
-
 // subtract
 function subtract(a) {
   let total = a[0];
@@ -25,10 +27,7 @@ function subtract(a) {
   }
   return total;
 }
-let numbers2 = [5, 2];
-let numbers3 = [10, 2, 1, 5];
-console.log(subtract(numbers2));
-console.log(subtract(numbers3));
+
 // multiply
 function multiply(a) {
   let total = a[0];
@@ -37,10 +36,7 @@ function multiply(a) {
   }
   return total;
 }
-let numbers4 = [5, 2];
-let numbers5 = [10, 50];
-console.log(multiply(numbers4));
-console.log(multiply(numbers5));
+
 // divide
 function divide(a) {
   let total = a[0];
@@ -49,11 +45,6 @@ function divide(a) {
   }
   return total;
 }
-
-let numbers6 = [5, 2];
-let numbers7 = [10, 50];
-console.log(divide(numbers6));
-console.log(divide(numbers7));
 
 // Create an operate function that takes two numbers and an operator and returns the result of the operation.
 function operate(a, b, operate) {
@@ -68,16 +59,42 @@ function operate(a, b, operate) {
   }
 }
 
-// Populate the display with number button clicks
+// Clear the display function
+function clearDisplay() {
+  displayValue = "";
+  digitDisplay.innerHTML = displayValue;
+  firstValue = 0;
+}
 
 // Event listeners
+// If user clicks on a button that contains "keypad-button", run the following function
+// Change the display value to the value of the button that was clicked
 window.addEventListener("click", (e) => {
-  console.log(e.target);
-  if (e.target.classList.contains("keypad-button")) {
+  if (e.target.classList.contains("clear")) {
+    clearDisplay();
+  } else if (e.target.classList.contains("keypad-button")) {
     digitDisplay.textContent += e.target.textContent;
     displayValue += e.target.textContent;
   }
 });
 
-// Create a clear button that clears the display
-clearButton.addEventListener("click", (e) => console.log("clear clicked"));
+// Detect when user clicks on an operator and record which operator was clicked
+window.addEventListener("click", (e) => {
+  if (e.target.classList.contains("operator")) {
+    e.target.classList.add("operator-clicked");
+    // Remove the operator-clicked class from all other operators
+
+    activeOperator = e.target.textContent;
+    console.log(activeOperator);
+  }
+});
+
+// equalsButton.onclick = operate(displayValue, secondValue, result);
+
+// When equals is clicked, run the operate function and display the result in the display
+equalsButton.addEventListener("click", () => {});
+
+// If user clicks on the clear button clear the display and reset the display value to 0
+clearButton.addEventListener("click", () => {
+  clearDisplay();
+});

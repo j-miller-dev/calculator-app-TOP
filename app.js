@@ -7,6 +7,7 @@ let activeOperator = "";
 const buttonClick = document.querySelectorAll(".keypad-button");
 const clearButton = document.getElementById("clear");
 const equalsButton = document.getElementById("equals");
+const operatorButtons = document.querySelectorAll(".operator");
 // let firstValue = 0;
 
 // Simple calculator functions
@@ -81,8 +82,17 @@ window.addEventListener("click", (e) => {
 // Detect when user clicks on an operator and record which operator was clicked
 window.addEventListener("click", (e) => {
   if (e.target.classList.contains("operator")) {
-    e.target.classList.add("operator-clicked");
     // Remove the operator-clicked class from all other operators
+    operatorButtons.forEach((operator) => {
+      if (
+        operator.classList.contains("operator-clicked")
+          ? operator.classList.remove("operator-clicked")
+          : null
+      );
+    });
+
+    // Add the operator-clicked class to the operator that was clicked
+    e.target.classList.add("operator-clicked");
 
     activeOperator = e.target.textContent;
     console.log(activeOperator);

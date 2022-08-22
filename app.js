@@ -1,7 +1,7 @@
 // Variables
 let digitDisplay = document.querySelector(".display-text");
 let displayValue = "";
-let firstValue = "";
+let firstValue = 0;
 let secondValue = 0;
 let activeOperator = "";
 const buttonClick = document.querySelectorAll(".keypad-button");
@@ -67,22 +67,43 @@ function clearDisplay() {
   firstValue = 0;
 }
 
+function calculate() {}
+
+function isOperatorActive() {
+  if (activeOperator === "") {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 // Event listeners
 // If user clicks on a button that contains "keypad-button", run the following function
 // Change the display value to the value of the button that was clicked
 window.addEventListener("click", (e) => {
   if (e.target.classList.contains("clear")) {
     clearDisplay();
-  } else if (e.target.classList.contains("keypad-button")) {
+  } else if (
+    e.target.classList.contains("keypad-button") &&
+    isOperatorActive()
+  ) {
     digitDisplay.textContent += e.target.textContent;
     displayValue += e.target.textContent;
+    secondValue = parseInt(displayValue);
+  } else if (
+    e.target.classList.contains("keypad-button") &&
+    !isOperatorActive()
+  ) {
+    digitDisplay.textContent += e.target.textContent;
+    displayValue += e.target.textContent;
+    firstValue = parseInt(displayValue);
   }
 });
 
 // Detect when user clicks on an operator and record which operator was clicked
 window.addEventListener("click", (e) => {
   if (e.target.classList.contains("operator")) {
-    // Remove the operator-clicked class from all other operators
+    // Remove the operator-clicked class from all other operators (essentially toggle between operators)
     operatorButtons.forEach((operator) => {
       if (
         operator.classList.contains("operator-clicked")
@@ -102,7 +123,11 @@ window.addEventListener("click", (e) => {
 // equalsButton.onclick = operate(displayValue, secondValue, result);
 
 // When equals is clicked, run the operate function and display the result in the display
-equalsButton.addEventListener("click", () => {});
+equalsButton.addEventListener("click", () => {
+  operate(firstValue, secondValue, activeOperator);
+  console.log("equals clicked");
+  console.log(operate(firstValue, secondValue, activeOperator));
+});
 
 // If user clicks on the clear button clear the display and reset the display value to 0
 clearButton.addEventListener("click", () => {

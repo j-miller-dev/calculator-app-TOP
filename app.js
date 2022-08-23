@@ -13,8 +13,8 @@ const operatorButtons = document.querySelectorAll(".operator");
 // Simple calculator functions
 // add
 function add(a) {
-  var total = 0;
-  for (var i in a) {
+  let total = 0;
+  for (let i in a) {
     total += a[i];
   }
   return total;
@@ -51,11 +51,11 @@ function divide(a) {
 function operate(a, b, operate) {
   if (operate === "+") {
     return add([a, b]);
-  } else if (operate === "-") {
+  } else if (operate == "-") {
     return subtract([a, b]);
-  } else if (operate === "*") {
+  } else if (operate == "*") {
     return multiply([a, b]);
-  } else if (operate === "/") {
+  } else if (operate == "/") {
     return divide([a, b]);
   }
 }
@@ -65,9 +65,17 @@ function clearDisplay() {
   displayValue = "";
   digitDisplay.innerHTML = displayValue;
   firstValue = 0;
+  secondValue = 0;
+  activeOperator = "";
+  // Untoggle all operator buttons
+  operatorButtons.forEach((operator) => {
+    if (
+      operator.classList.contains("operator-clicked")
+        ? operator.classList.remove("operator-clicked")
+        : null
+    );
+  });
 }
-
-function calculate() {}
 
 function isOperatorActive() {
   if (activeOperator === "") {
@@ -77,26 +85,39 @@ function isOperatorActive() {
   }
 }
 
+// Create a function that updates both firstValue and secondValue
+function updateValues(value) {
+  if (isOperatorActive()) {
+    secondValue += value;
+  } else {
+    firstValue += value;
+  }
+}
+
+// Create a function that updates the display correctly
+function updateDisplay(value) {
+  if (activeOperator === "") {
+    parseInt((digitDisplay.innerHTML += value));
+  } else {
+    parseInt((digitDisplay.innerHTML += value));
+  }
+}
+
 // Event listeners
-// If user clicks on a button that contains "keypad-button", run the following function
-// Change the display value to the value of the button that was clicked
+// Clear display event listener
 window.addEventListener("click", (e) => {
   if (e.target.classList.contains("clear")) {
     clearDisplay();
-  } else if (
-    e.target.classList.contains("keypad-button") &&
-    isOperatorActive()
-  ) {
-    digitDisplay.textContent += e.target.textContent;
-    displayValue += e.target.textContent;
-    secondValue = parseInt(displayValue);
-  } else if (
-    e.target.classList.contains("keypad-button") &&
-    !isOperatorActive()
-  ) {
-    digitDisplay.textContent += e.target.textContent;
-    displayValue += e.target.textContent;
-    firstValue = parseInt(displayValue);
+  }
+});
+
+// If user clicks on a button that contains "keypad-button", run the following function
+// Change the display value to the value of the button that was clicked
+window.addEventListener("click", (e) => {
+  if (e.target.classList.contains("keypad-button")) {
+    console.log("keypad-button clicked");
+    updateValues(e.target.innerHTML);
+    updateDisplay(e.target.innerHTML);
   }
 });
 
@@ -110,26 +131,24 @@ window.addEventListener("click", (e) => {
           ? operator.classList.remove("operator-clicked")
           : null
       );
+      // Store the first variable
     });
+
+    activeOperator = e.target.innerHTML;
+    console.log("The current operator is... " + activeOperator);
 
     // Add the operator-clicked class to the operator that was clicked
     e.target.classList.add("operator-clicked");
-
-    activeOperator = e.target.textContent;
-    console.log(activeOperator);
   }
 });
 
-// equalsButton.onclick = operate(displayValue, secondValue, result);
-
 // When equals is clicked, run the operate function and display the result in the display
 equalsButton.addEventListener("click", () => {
-  operate(firstValue, secondValue, activeOperator);
   console.log("equals clicked");
-  console.log(operate(firstValue, secondValue, activeOperator));
 });
 
 // If user clicks on the clear button clear the display and reset the display value to 0
 clearButton.addEventListener("click", () => {
+  console.log("clear display clicked");
   clearDisplay();
 });

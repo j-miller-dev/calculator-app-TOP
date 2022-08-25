@@ -4,10 +4,9 @@ class Calculator {
     this.currentOperandTextElement = currentOperandTextElement;
     this.clear();
   }
-
   clear() {
-    this.currentOperand = "";
-    this.previousOperand = "";
+    this.currentOperand = " ";
+    this.previousOperand = " ";
     this.operation = undefined;
   }
 
@@ -89,6 +88,9 @@ class Calculator {
   }
 }
 
+console.log("hello");
+
+// Variables
 const numberButtons = document.querySelectorAll("[data-number]");
 const operationButtons = document.querySelectorAll("[data-operation]");
 const equalsButton = document.querySelector("[data-equals]");

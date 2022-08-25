@@ -1,97 +1,62 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  font-family: Gotham Rounded, sans-serif;
+  font-weight: normal;
+}
+
 body {
-  background-color: goldenrod;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to right, #cbce91ff, #ea738dff);
 }
 
-.container {
-  display: flex;
+.calculator-grid {
+  display: grid;
+  justify-content: center;
   align-content: center;
-  flex-direction: row;
-  justify-content: center;
+  min-height: 100vh;
+  grid-template-columns: repeat(4, 100px);
+  grid-template-rows: minmax(120px, auto) repeat(5, 100px);
 }
 
-.calculator {
-  max-width: 450px;
-  padding: 1rem;
-  background-color: #fff;
-  max-height: 400px;
-  display: grid;
-  grid-template-areas:
-    "display"
-    "buttons1";
-  justify-content: center;
+.calculator-grid > button {
+  cursor: pointer;
+  font-size: 2rem;
+  border: 1px, solid #ffffff;
+  outline: none;
+  background-color: rbga(255, 255, 255, 0.75);
 }
 
-.display {
-  width: 100%;
-  border: 1px solid black;
-  height: 50px;
-  grid-area: display;
-  justify-content: center;
+.calculator-grid > button:hover {
+  background-color: #a9a9a9;
+}
+
+.span-two {
+  grid-column: span 2;
+  color: #adf802;
+  background-color: rgba(139, 0, 139, 0.8);
+}
+
+.output {
+  grid-column: 1 /-1;
+  background-color: rgba(0, 0, 0, 0.75);
   display: flex;
-  flex-direction: row-reverse;
+  align-items: flex-end;
+  justify-content: space-around;
+  flex-direction: column;
+  padding: 10px;
+  word-wrap: break-word;
+  word-break: break-all;
 }
 
-.row-1 {
-  grid-area: buttons1;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  /* grid-gap: 5px; */
+.output .previous-operand {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 1.5rem;
 }
 
-.row-2 {
-  grid-area: buttons2;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  /* grid-gap: 5px; */
-}
-
-.row-3 {
-  grid-area: buttons3;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  /* grid-gap: 5px; */
-}
-
-.row-4 {
-  grid-area: buttons4;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  /* grid-gap: 5px; */
-}
-.row-5 {
-  grid-area: buttons5;
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  /* grid-gap: 5px; */
-}
-
-#zero {
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-}
-
-.keypad-button {
-  width: 60px;
-  height: 60px;
-  cursor: pointer;
-}
-
-.clear {
-  width: 60px;
-  height: 60px;
-  cursor: pointer;
-}
-
-.operator {
-  width: 60px;
-  height: 60px;
-  cursor: pointer;
-}
-
-.operator-clicked {
-  width: 60px;
-  height: 60px;
-  cursor: pointer;
-  border: 2px solid black;
+.output .current-operand {
+  color: white;
+  font-size: 2.5rem;
 }

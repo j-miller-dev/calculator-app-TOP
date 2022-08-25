@@ -1,154 +1,171 @@
-// Variables
-let digitDisplay = document.querySelector(".display-text");
-let displayValue = "";
-let firstValue = 0;
-let secondValue = 0;
-let activeOperator = "";
-const buttonClick = document.querySelectorAll(".keypad-button");
-const clearButton = document.getElementById("clear");
-const equalsButton = document.getElementById("equals");
-const operatorButtons = document.querySelectorAll(".operator");
-// let firstValue = 0;
-
-// Simple calculator functions
-// add
-function add(a) {
-  let total = 0;
-  for (let i in a) {
-    total += a[i];
+class Calculator {
+  constructor(previousOperandTextElement, currentOperandTextElement) {
+    this.previousOperandTextElement = previousOperandTextElement;
+    this.currentOperandTextElement = currentOperandTextElement;
+    this.clear();
   }
-  return total;
-}
 
-// subtract
-function subtract(a) {
-  let total = a[0];
-  for (let i = 1, length = a.length; i < length; i++) {
-    total -= a[i];
+  clear() {
+    this.currentOperand = "";
+    this.previousOperand = "";
+    this.operation = undefined;
   }
-  return total;
-}
 
-// multiply
-function multiply(a) {
-  let total = a[0];
-  for (let i = 1, length = a.length; i < length; i++) {
-    total *= a[i];
+  delete() {
+    this.currentOperand = this.currentOperand.toString().slice(0, -1);
   }
-  return total;
-}
 
-// divide
-function divide(a) {
-  let total = a[0];
-  for (let i = 1, length = a.length; i < length; i++) {
-    total /= a[i];
+  appendNumber(number) {
+    if (number === "." && this.currentOperand.includes(".")) return;
+    this.currentOperand = this.currentOperand.toString() + number.toString();
   }
-  return total;
-}
 
-// Create an operate function that takes two numbers and an operator and returns the result of the operation.
-function operate(a, b, operate) {
-  if (operate === "+") {
-    return add([a, b]);
-  } else if (operate == "-") {
-    return subtract([a, b]);
-  } else if (operate == "*") {
-    return multiply([a, b]);
-  } else if (operate == "/") {
-    return divide([a, b]);
+  chooseOperation(operation) {
+    if (this.currentOperand === "") return;
+    if (this.previousOperand !== "") {
+      this.compute();
+    }
+    this.operation = operation;
+    this.previousOperand = this.currentOperand;
+    this.currentOperand = "";
   }
-}
 
-// Clear the display function
-function clearDisplay() {
-  displayValue = "";
-  digitDisplay.innerHTML = displayValue;
-  firstValue = 0;
-  secondValue = 0;
-  activeOperator = "";
-  // Untoggle all operator buttons
-  operatorButtons.forEach((operator) => {
-    if (
-      operator.classList.contains("operator-clicked")
-        ? operator.classList.remove("operator-clicked")
-        : null
+  compute() {
+    let computation;
+    const prev = parseFloat(this.previousOperand);
+    const current = parseFloat(this.currentOperand);
+    if (isNaN(prev) || isNaN(current)) return;
+    switch (this.operation) {
+      case "+":
+        computation = prev + current;
+        break;
+      case "-":
+        computation = prev - current;
+        break;
+      case "*":
+        computation = prev * current;
+        break;
+      case "÷":
+        computation = prev / current;
+        break;
+      default:
+        return;
+    }
+    this.currentOperand = computation;
+    this.operation = undefined;
+    this.previousOperand = "";
+  }
+
+  getDisplayNumber(number) {
+    const stringNumber = number.toString();
+    const integerDigits = parseFloat(stringNumber.split(".")[0]);
+    const decimalDigits = stringNumber.split(".")[1];
+    let integerDisplay;
+    if (isNaN(integerDigits)) {
+      integerDisplay = "";
+    } else {
+      integerDisplay = integerDigits.toLocaleString("en", {
+        maximumFractionDigits: 0,
+      });
+    }
+    if (decimalDigits != null) {
+      return `${integerDisplay}.${decimalDigits}`;
+    } else {
+      return integerDisplay;
+    }
+  }
+
+  updateDisplay() {
+    this.currentOperandTextElement.innerText = this.getDisplayNumber(
+      this.currentOperand
     );
+    if (this.operation != null) {
+      this.previousOperandTextElement.innerText = `${this.getDisplayNumber(
+        this.previousOperand
+      )} ${this.operation}`;
+    } else {
+      this.previousOperandTextElement.innerText = "";
+    }
+  }
+}
+
+const numberButtons = document.querySelectorAll("[data-number]");
+const operationButtons = document.querySelectorAll("[data-operation]");
+const equalsButton = document.querySelector("[data-equals]");
+const deleteButton = document.querySelector("[data-delete]");
+const allClearButton = document.querySelector("[data-all-clear]");
+const previousOperandTextElement = document.querySelector(
+  "[data-previous-operand]"
+);
+const currentOperandTextElement = document.querySelector(
+  "[data-current-operand]"
+);
+
+const calculator = new Calculator(
+  previousOperandTextElement,
+  currentOperandTextElement
+);
+
+numberButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    calculator.appendNumber(button.innerText);
+    calculator.updateDisplay();
   });
-}
-
-function isOperatorActive() {
-  if (activeOperator === "") {
-    return false;
-  } else {
-    return true;
-  }
-}
-
-// Create a function that updates both firstValue and secondValue
-function updateValues(value) {
-  if (isOperatorActive()) {
-    secondValue += value;
-  } else {
-    firstValue += value;
-  }
-}
-
-// Create a function that updates the display correctly
-function updateDisplay(value) {
-  if (activeOperator === "") {
-    parseInt((digitDisplay.innerHTML += value));
-  } else {
-    parseInt((digitDisplay.innerHTML += value));
-  }
-}
-
-// Event listeners
-// Clear display event listener
-window.addEventListener("click", (e) => {
-  if (e.target.classList.contains("clear")) {
-    clearDisplay();
-  }
 });
 
-// If user clicks on a button that contains "keypad-button", run the following function
-// Change the display value to the value of the button that was clicked
-window.addEventListener("click", (e) => {
-  if (e.target.classList.contains("keypad-button")) {
-    console.log("keypad-button clicked");
-    updateValues(e.target.innerHTML);
-    updateDisplay(e.target.innerHTML);
+operationButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    calculator.chooseOperation(button.innerText);
+    calculator.updateDisplay();
+  });
+});
+
+equalsButton.addEventListener("click", (button) => {
+  calculator.compute();
+  calculator.updateDisplay();
+});
+
+allClearButton.addEventListener("click", (button) => {
+  calculator.clear();
+  calculator.updateDisplay();
+});
+
+deleteButton.addEventListener("click", (button) => {
+  calculator.delete();
+  calculator.updateDisplay();
+});
+
+document.addEventListener("keydown", function (event) {
+  let patternForNumbers = /[0-9]/g;
+  let patternForOperators = /[+\-*\/]/g;
+  if (event.key.match(patternForNumbers)) {
+    event.preventDefault();
+    calculator.appendNumber(event.key);
+    calculator.updateDisplay();
   }
-});
-
-// Detect when user clicks on an operator and record which operator was clicked
-window.addEventListener("click", (e) => {
-  if (e.target.classList.contains("operator")) {
-    // Remove the operator-clicked class from all other operators (essentially toggle between operators)
-    operatorButtons.forEach((operator) => {
-      if (
-        operator.classList.contains("operator-clicked")
-          ? operator.classList.remove("operator-clicked")
-          : null
-      );
-      // Store the first variable
-    });
-
-    activeOperator = e.target.innerHTML;
-    console.log("The current operator is... " + activeOperator);
-
-    // Add the operator-clicked class to the operator that was clicked
-    e.target.classList.add("operator-clicked");
+  if (event.key === ".") {
+    event.preventDefault();
+    calculator.appendNumber(event.key);
+    calculator.updateDisplay();
   }
-});
-
-// When equals is clicked, run the operate function and display the result in the display
-equalsButton.addEventListener("click", () => {
-  console.log("equals clicked");
-});
-
-// If user clicks on the clear button clear the display and reset the display value to 0
-clearButton.addEventListener("click", () => {
-  console.log("clear display clicked");
-  clearDisplay();
+  if (event.key.match(patternForOperators)) {
+    event.preventDefault();
+    calculator.chooseOperation(event.key);
+    calculator.updateDisplay();
+  }
+  if (event.key === "Enter" || event.key === "=") {
+    event.preventDefault();
+    calculator.compute();
+    calculator.updateDisplay();
+  }
+  if (event.key === "Backspace") {
+    event.preventDefault();
+    calculator.delete();
+    calculator.updateDisplay();
+  }
+  if (event.key == "Delete") {
+    event.preventDefault();
+    calculator.clear();
+    calculator.updateDisplay();
+  }
 });
